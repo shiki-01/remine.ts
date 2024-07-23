@@ -1,29 +1,29 @@
-import { Routes, Route } from "react-router-dom";
+import {Routes, Route, Link} from "react-router-dom";
 import {NextUIProvider} from "@nextui-org/react";
 import Setting from "./pages/Setting";
 import NewRemined from "./pages/NewRemined";
 import NotFound from "./pages/NotFound";
 
-import {Card, CardBody, Image, Button, Slider} from "@nextui-org/react";
+import {Card, CardBody, Button} from "@nextui-org/react";
+
+import {Settings} from 'lucide-react';
 
 function App() {
 
     return (
         <>
             <NextUIProvider>
-                <Card
-                    isBlurred
-                    className="border-none bg-background/60 dark:bg-default-100/50 max-w-[610px]"
-                    shadow="sm"
-                >
-                    <CardBody>
-                        <Routes>
-                            <Route path="/" element={<NewRemined />} />
-                            <Route path="/setting" element={<Setting />} />
-                            <Route path="*" element={<NotFound />} />
-                        </Routes>
-                    </CardBody>
-                </Card>
+                <Link to="/setting"
+                      className={"flex items-center justify-center text-primary-500 dark:text-primary-400"}>
+                    <Button isIconOnly color="danger" aria-label="Like">
+                        <Settings/>
+                    </Button>
+                </Link>
+                <Routes>
+                    <Route path="/" element={<NewRemined/>}/>
+                    <Route path="/setting" element={<Setting/>}/>
+                    <Route path="*" element={<NotFound/>}/>
+                </Routes>
             </NextUIProvider>
         </>
     )
