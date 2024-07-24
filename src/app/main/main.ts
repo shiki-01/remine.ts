@@ -1,9 +1,11 @@
 import {app, BrowserWindow, Tray, Menu} from 'electron';
+import { join } from 'path';
 
-declare const MAIN_WINDOW_WEBPACK_ENTRY: string;
-declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
+const isDevelopment = process.env.NODE_ENV !== 'production';
+const devUrl = 'http://localhost:3000';
+const prodPath = join(__dirname, '../renderer/out/index.html');
+const prodUrl = new URL(`file://${prodPath}`).toString();
 
-import path from 'path';
 
 if (require('electron-squirrel-startup')) {
     app.quit();
@@ -53,8 +55,8 @@ const createTray = (): void => {
         },
     ]);
 
-    tray.setToolTip('remine.ts');
-    tray.setContextMenu(contextMenu);
+    tray?.setToolTip('remine.ts');
+    tray?.setContextMenu(contextMenu);
 }
 
 
@@ -73,11 +75,12 @@ const createWindow = (): void => {
         frame: false,
         backgroundMaterial: 'acrylic',
         webPreferences: {
-            preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+            preload: join(__dirname, 'preload.js'),
         },
     });
 
-    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY).then(r => console.log(r));
+    const url = isDevelopment ? devUrl : prodUrl;
+    mainWindow.loadURL(url).then(() => console.log(`Loaded: ${url}`));
 
     mainWindow.on('blur', () => {
          //mainWindow?.hide();
@@ -95,7 +98,7 @@ const showWindow = (): void => {
 
 
 app.on('ready', () => {
-    tray = new Tray(path.join(__dirname, 'lib', 'remine.png'));
+    tray = new Tray(join(__dirname, 'lib', 'remine.png'));
     createTray();
     createWindow();
 });
